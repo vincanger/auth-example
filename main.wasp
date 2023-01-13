@@ -1,0 +1,59 @@
+app AuthExample {
+  wasp: {
+    version: "^0.8.0"
+  },
+  title: "AuthExample",
+  dependencies: [
+    ("@tailwindcss/forms", "^0.5.3"),
+    ("@emotion/styled", "11.10.5"),
+    ("@emotion/react", "11.10.5"),
+    ("@chakra-ui/react", "1.8.8"),
+    ("react-rewards", "2.0.4"),
+    ("framer-motion", "6.0"),
+    ("react-icons", "4.7.1"),
+  ],
+
+  auth: {
+    userEntity: User,
+    externalAuthEntity: SocialLogin,
+    methods: {
+      google: {},
+      gitHub: {},
+      usernameAndPassword: {}
+    },
+    onAuthFailedRedirectTo: "/login",
+  }
+}
+
+route RootRoute { path: "/", to: MainPage }
+page MainPage {
+  authRequired: true,
+  component: import Main from "@client/MainPage"
+}
+
+route LoginRoute { path: "/login", to: LoginPage }
+page LoginPage {
+  component: import Login from "@client/Login"
+}
+
+route RegisterRoute { path: "/register", to: RegisterPage }
+page RegisterPage {
+  component: import Register from "@client/Register"
+}
+
+entity User {=psl
+    id                        Int           @id @default(autoincrement())
+    username                  String        @unique
+    password                  String
+    externalAuthAssociations  SocialLogin[]
+psl=}
+
+entity SocialLogin {=psl
+  id          Int       @id @default(autoincrement())
+  provider    String
+  providerId  String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  createdAt   DateTime  @default(now())
+  @@unique([provider, providerId, userId])
+psl=}
