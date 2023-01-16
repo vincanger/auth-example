@@ -2,8 +2,8 @@ import React from 'react';
 import waspLogo from './waspLogo.png';
 import { ImGoogle, ImGithub } from 'react-icons/im';
 import Card from './components/Card';
-import { Box, Stack, Input } from '@chakra-ui/react';
-import { Link, useHistory } from 'react-router-dom';
+import { Box, Input } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
 
 export default function Example({ handleLogin, googleUrl, githubUrl }) {
   const [username, setUsername] = React.useState('');
@@ -14,10 +14,11 @@ export default function Example({ handleLogin, googleUrl, githubUrl }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const login = await handleLogin(username, password);
+      await handleLogin(username, password);
       history.push('/');
     } catch (error) {
       console.error(error);
+      alert('Invalid username or password. Please try again.')
     }
   };
 

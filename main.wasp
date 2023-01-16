@@ -2,7 +2,9 @@ app AuthExample {
   wasp: {
     version: "^0.8.0"
   },
+
   title: "AuthExample",
+  
   dependencies: [
     ("@tailwindcss/forms", "^0.5.3"),
     ("@emotion/styled", "11.10.5"),
@@ -25,22 +27,6 @@ app AuthExample {
   }
 }
 
-route RootRoute { path: "/", to: MainPage }
-page MainPage {
-  authRequired: true,
-  component: import Main from "@client/MainPage"
-}
-
-route LoginRoute { path: "/login", to: LoginPage }
-page LoginPage {
-  component: import Login from "@client/Login"
-}
-
-route RegisterRoute { path: "/register", to: RegisterPage }
-page RegisterPage {
-  component: import Register from "@client/Register"
-}
-
 entity User {=psl
     id                        Int           @id @default(autoincrement())
     username                  String        @unique
@@ -57,3 +43,21 @@ entity SocialLogin {=psl
   createdAt   DateTime  @default(now())
   @@unique([provider, providerId, userId])
 psl=}
+
+// -<>-- 🚗 ROUTES 🐝 --<>- //
+
+route RootRoute { path: "/", to: MainPage }
+page MainPage {
+  authRequired: true,
+  component: import Main from "@client/MainPage"
+}
+
+route LoginRoute { path: "/login", to: LoginPage }
+page LoginPage {
+  component: import Login from "@client/Login"
+}
+
+route RegisterRoute { path: "/register", to: RegisterPage }
+page RegisterPage {
+  component: import Register from "@client/Register"
+}
