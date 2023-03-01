@@ -3,17 +3,20 @@ import Logo from './components/Logo';
 import { theme } from './components/Theme';
 import useReward from './components/useReward';
 import { MouseProvider } from './components/MouseProvider';
-import { ChakraProvider, ColorModeScript, VStack } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, VStack, HStack, Heading } from '@chakra-ui/react';
 
-const Login = ({ children }: { children: React.ReactNode }) => {
+const Login = ({ username, children }: { username?: string, children: React.ReactNode }) => {
   useReward();
   return (
     <MouseProvider>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode='light' />
         <VStack mt={10} spacing={10}>
-          <Logo mb={-10} />
-          <span id='rewardId' />
+          <HStack>
+            <Logo />
+            <Heading>To Do's</Heading>
+          </HStack>
+          {/* <span id='rewardId' /> */}
 
           {children}
         </VStack>

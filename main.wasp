@@ -1,19 +1,6 @@
-app AuthExample {
-  wasp: {
-    version: "^0.8.0"
-  },
-
-  title: "AuthExample",
-  
-  dependencies: [
-    ("@tailwindcss/forms", "^0.5.3"),
-    ("@emotion/styled", "11.10.5"),
-    ("@emotion/react", "11.10.5"),
-    ("@chakra-ui/react", "1.8.8"),
-    ("react-rewards", "2.0.4"),
-    ("framer-motion", "6.0"),
-    ("react-icons", "4.7.1"),
-  ],
+app ToDoApp {
+  wasp: { version: "^0.8.2" },
+  title: "ToDo App",
 
   auth: {
     userEntity: User,
@@ -24,7 +11,17 @@ app AuthExample {
       usernameAndPassword: {}
     },
     onAuthFailedRedirectTo: "/login",
-  }
+  },
+
+ dependencies: [
+    ("@tailwindcss/forms", "^0.5.3"),
+    ("@emotion/styled", "11.10.5"),
+    ("@emotion/react", "11.10.5"),
+    ("@chakra-ui/react", "1.8.8"),
+    ("react-rewards", "2.0.4"),
+    ("framer-motion", "6.0"),
+    ("react-icons", "4.7.1"),
+  ],
 }
 
 entity User {=psl
@@ -44,6 +41,8 @@ entity SocialLogin {=psl
   @@unique([provider, providerId, userId])
 psl=}
 
+
+
 // -<>-- 🚗 ROUTES 🐝 --<>- //
 
 route RootRoute { path: "/", to: MainPage }
@@ -54,10 +53,38 @@ page MainPage {
 
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
-  component: import Login from "@client/Login"
+  component: import { LoginPage } from "@client/Login"
 }
 
 route RegisterRoute { path: "/register", to: RegisterPage }
 page RegisterPage {
-  component: import Register from "@client/Register"
+  component: import Register from "@client/components/Register"
+}
+
+// -<>-- 👩‍⚕️ OPERATIONS ⛑ --<>- //
+
+entity Task {=psl
+    id          Int     @id @default(autoincrement())
+    description String
+    isDone      Boolean @default(false)
+psl=}
+
+query getTasks {
+  fn: import { getTasks } from "@server/queries.js",
+  entities: [Task]
+}
+
+action createTask {
+  fn: import { createTask } from "@server/actions.js",
+  entities: [Task]
+}
+
+action updateTask {
+  fn: import { updateTask } from "@server/actions.js",
+  entities: [Task]
+}
+
+action deleteTask {
+  fn: import { deleteTask } from "@server/actions.js",
+  entities: [Task]
 }

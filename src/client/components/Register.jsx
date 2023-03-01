@@ -1,13 +1,11 @@
 import React from 'react';
-import waspLogo from './waspLogo.png';
-import { ImGoogle, ImGithub } from 'react-icons/im';
-import Card from './components/Card';
+import waspLogo from '../waspLogo.png';
+import Card from './Card';
 import { Box, Stack } from '@chakra-ui/react';
-import SignInForm from './SignInForm.jsx';
-import { MouseProvider } from './components/MouseProvider';
-import { ChakraProvider, ColorModeScript, useColorMode } from '@chakra-ui/react';
-import { theme } from './components/Theme';
-import { Link, useHistory } from 'react-router-dom';
+import { MouseProvider } from './MouseProvider';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
+import { theme } from './Theme';
+import { useHistory } from 'react-router-dom';
 
 
 import signup from '@wasp/auth/signup';

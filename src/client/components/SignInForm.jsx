@@ -1,7 +1,7 @@
 import React from 'react';
-import waspLogo from './waspLogo.png';
+import waspLogo from '../waspLogo.png';
 import { ImGoogle, ImGithub } from 'react-icons/im';
-import Card from './components/Card';
+import Card from './Card';
 import { Box, Input } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
@@ -43,11 +43,11 @@ export default function Example({ handleLogin, googleUrl, githubUrl }) {
             </div>
 
             <div className='mt-8'>
-              <div>
+              {/* <div>
                 <div>
                   <p className='text-sm font-medium text-gray-700'>Sign in with</p>
 
-                  <div className='mt-1 grid grid-cols-2 gap-3'>
+                   <div className='mt-1 grid grid-cols-2 gap-3'>
                     <Box boxShadow={'sm'} rounded={'0.5rem'}>
                       <Card w={'full'} h={'full'} interactive>
                         <a
@@ -72,8 +72,8 @@ export default function Example({ handleLogin, googleUrl, githubUrl }) {
                         </a>
                       </Card>
                     </Box>
-                  </div>
-                </div>
+                  </div> 
+                </div> 
 
                 <div className='relative mt-6'>
                   <div className='absolute inset-0 flex items-center' aria-hidden='true'>
@@ -83,7 +83,7 @@ export default function Example({ handleLogin, googleUrl, githubUrl }) {
                     <span className='bg-white px-2 text-gray-500'>Or continue with</span>
                   </div>
                 </div>
-              </div>
+              </div>  */}
 
               <div className='mt-6'>
                 <form className='space-y-6'>
