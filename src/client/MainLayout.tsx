@@ -3,15 +3,16 @@ import Logo from './components/Logo';
 import { theme } from './components/Theme';
 import useReward from './components/useReward';
 import { MouseProvider } from './components/MouseProvider';
-import { ChakraProvider, ColorModeScript, VStack, HStack, Heading } from '@chakra-ui/react';
+import { ChakraProvider, VStack, HStack, Heading } from '@chakra-ui/react';
+import Button from './components/Button';
+import logout from '@wasp/auth/logout.js';
 
 const Login = ({ username, children }: { username?: string, children: React.ReactNode }) => {
   useReward();
   return (
     <MouseProvider>
       <ChakraProvider theme={theme}>
-        <ColorModeScript initialColorMode='light' />
-        <VStack mt={10} spacing={10}>
+        <VStack mt={10} mx='auto' spacing={10} justify='center' align='center' w='400px'>
           <HStack>
             <Logo />
             <Heading>To Do's</Heading>
@@ -19,6 +20,7 @@ const Login = ({ username, children }: { username?: string, children: React.Reac
           {/* <span id='rewardId' /> */}
 
           {children}
+          <Button onClick={logout}>Logout</Button>
         </VStack>
       </ChakraProvider>
     </MouseProvider>

@@ -2,8 +2,7 @@ export async function createTask({ description }, context) {
 
   return context.entities.Task.create({
     data: {
-      description,
-      user: { connect: { id: context.user.id } },
+      description
     },
   });
 }

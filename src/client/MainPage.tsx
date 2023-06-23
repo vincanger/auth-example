@@ -1,127 +1,90 @@
-import './Main.css';
-import { Input, HStack, Button as CButton} from '@chakra-ui/react';
-import React, { useEffect, FormEventHandler, FormEvent } from 'react';
-import MainLayout from './MainLayout';
+import { Input, HStack, Text, Checkbox, Button as CButton } from '@chakra-ui/react';
 import Button from './components/Button';
-
-/** 😎 WASP AUTH 🔐 */
-import useAuth from '@wasp/auth/useAuth';
-import logout from '@wasp/auth/logout.js';
-
-/** 💪 WASP OPERATIONS 🥼 */
-import { useQuery } from '@wasp/queries'; // Wasp uses a thin wrapper around react-query
-import getTasks from '@wasp/queries/getTasks';
-import createTask from '@wasp/actions/createTask';
-import updateTask from '@wasp/actions/updateTask';
-import deleteTask from '@wasp/actions/deleteTask';
+import MainLayout from './MainLayout';
+import React, { useState } from 'react';
 
 const MainPage = () => {
-  // const { data: user } = useAuth();
-  const { data: tasks, isLoading } = useQuery<unknown, Task[]>(getTasks);
+  const [tasks, setTasks] = useState<Task[]>([
+    {
+      id: 1,
+      description: 'Task 1',
+      isDone: false,
+      userId: 1,
+    },
+  ]);
 
-  if (isLoading) return 'Loading...';
+  const handleNewTask = (newTask: Task) => setTasks([...tasks, newTask]);
 
   return (
     <MainLayout>
-      <NewTaskForm />
+      <NewTaskForm createTask={handleNewTask} />
 
-      {/* {tasks && <TasksList tasks={tasks} />} */}
-
-      <Button onClick={logout}>Logout</Button>
+      {tasks && tasks.map((tsk) => <Todo {...tsk} key={tsk.id} />)}
     </MainLayout>
   );
 };
 export default MainPage;
 
 function Todo({ id, isDone, description }: Task) {
-  const handleIsDoneChange: FormEventHandler<HTMLInputElement> = async (event) => {
+  return (
+    <HStack
+      alignItems={'center'}
+      bgColor='purple.50'
+      borderRadius='lg'
+      border='1px solid rgba(0, 0, 0, 0.11)'
+      p={2}
+      w='full'
+    >
+      <Checkbox checked={isDone} onChange={async (e) => console.log('!!!!')} />
+      <Text ml={2}>{description}</Text>
+      {/* {isDone && (
+        <CButton size={'xs'} variant='unstyled' onClick={() => deleteTask({ taskId: id })}>
+          '❌'
+        </CButton>
+      )} */}
+    </HStack>
+  );
+}
+
+function NewTaskForm({ createTask }: { createTask: any }) {
+  const [description, setDescription] = useState<string>('');
+
+  const handleSubmit = async () => {
     try {
-      console.log(typeof id)
-      await updateTask({
-        taskId: id,
-        isDone: event.currentTarget.checked,
+      createTask({
+        id: 3,
+        description,
+        isDone: false,
+        userId: 1,
       });
-    } catch (err: any) {
-      window.alert('Error while updating task ' + err?.message);
-    }
-  };
-
-  return (
-    <li>
-      <input
-        type='checkbox'
-        className='form-checkbox text-purple-500 focus:ring-0'
-        id={`checkbox-${id}`}
-        checked={isDone}
-        // onChange={!isDone ? (event) => handleIsDoneChange(event) : () => deleteTask({ taskId: id })}
-        onChange={handleIsDoneChange}
-      />
-      <label htmlFor={`checkbox-${id}`} className={isDone ? 'line-through' : ''}>
-        {' ' + description}
-      </label>
-      {isDone && <CButton
-        size={'xs'}
-        variant='unstyled'
-        onClick={() => deleteTask({ taskId: id })}
-      >
-        ❌
-      </CButton>}
-
-    </li>
-  );
-}
-
-function TasksList({ tasks }: { tasks: Task[] }) {
-  console.log(tasks.map((task) => task.isDone));
-  if (tasks.length === 0) return <p>No tasks yet.</p>;
-  return (
-    <ol className='tasklist'>
-      {tasks.map((tsk) => (
-        <Todo {...tsk} key={tsk.id} />
-      ))}
-    </ol>
-  );
-}
-
-function NewTaskForm() {
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    try {
-      const description = event.currentTarget.description.value;
-      console.log(description);
-      event.currentTarget.reset();
-      await createTask({ description });
     } catch (err: any) {
       window.alert('Error: ' + err?.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <HStack gap={1} >
-        <Input
-          id='description'
-          name='description'
-          type='text'
-          autoComplete='description'
-          fontSize={'sm'}
-          textColor={'gray.600'}
-          borderRadius={'0.5rem'}
-          border={'1px solid gray'}
-          bg='#f5f0ff !important'
-          _focus={{
-            boxShadow: 'none !important',
-            borderColor: 'transparent',
-          }}
-          boxShadow={'sm'}
-        />
-        <input type={'submit'} style={{ display: 'none' }}/>
-          <Button onClick={()=> ''} minWidth={'7rem'}>
-            {'Add Task'}
-          </Button>
-      </HStack>
-    </form>
+    <HStack gap={1} w='full'>
+      <Input
+        id='description'
+        autoComplete='description'
+        fontSize={'sm'}
+        textColor={'gray.600'}
+        mr={2}
+        w={'full'}
+        borderRadius={'0.5rem'}
+        border={'1px solid rgba(0, 0, 0, 0.1)'}
+        bg='#f5f0ff !important'
+        boxShadow={'md'}
+        _focus={{
+          boxShadow: 'none !important',
+          borderColor: 'transparent',
+        }}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+      <Button onClick={handleSubmit} minWidth={'7rem'}>
+        {'Add Task'}
+      </Button>
+    </HStack>
   );
 }
 

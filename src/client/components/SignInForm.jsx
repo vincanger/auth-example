@@ -5,7 +5,11 @@ import Card from './Card';
 import { Box, Input } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 
-export default function Example({ handleLogin, googleUrl, githubUrl }) {
+export default function Example({ 
+  handleLogin, 
+  googleUrl, 
+  githubUrl 
+}) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -43,7 +47,7 @@ export default function Example({ handleLogin, googleUrl, githubUrl }) {
             </div>
 
             <div className='mt-8'>
-              {/* <div>
+              <div>
                 <div>
                   <p className='text-sm font-medium text-gray-700'>Sign in with</p>
 
@@ -83,7 +87,7 @@ export default function Example({ handleLogin, googleUrl, githubUrl }) {
                     <span className='bg-white px-2 text-gray-500'>Or continue with</span>
                   </div>
                 </div>
-              </div>  */}
+              </div> 
 
               <div className='mt-6'>
                 <form className='space-y-6'>

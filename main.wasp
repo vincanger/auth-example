@@ -1,5 +1,5 @@
 app ToDoApp {
-  wasp: { version: "^0.8.2" },
+  wasp: { version: "^0.11.0" },
   title: "ToDo App",
 
   auth: {
@@ -14,15 +14,21 @@ app ToDoApp {
   },
 
  dependencies: [
-    ("@tailwindcss/forms", "^0.5.3"),
-    ("@emotion/styled", "11.10.5"),
-    ("@emotion/react", "11.10.5"),
-    ("@chakra-ui/react", "1.8.8"),
+    ("@chakra-ui/react", "2.7.1"),
     ("react-rewards", "2.0.4"),
-    ("framer-motion", "6.0"),
     ("react-icons", "4.7.1"),
   ],
 }
+
+entity Task {=psl
+    id          Int     @id @default(autoincrement())
+    description String
+    isDone      Boolean @default(false)
+psl=}
+
+
+
+
 
 entity User {=psl
     id                        Int           @id @default(autoincrement())
@@ -40,8 +46,6 @@ entity SocialLogin {=psl
   createdAt   DateTime  @default(now())
   @@unique([provider, providerId, userId])
 psl=}
-
-
 
 // -<>-- 🚗 ROUTES 🐝 --<>- //
 
@@ -61,30 +65,4 @@ page RegisterPage {
   component: import Register from "@client/components/Register"
 }
 
-// -<>-- 👩‍⚕️ OPERATIONS ⛑ --<>- //
 
-entity Task {=psl
-    id          Int     @id @default(autoincrement())
-    description String
-    isDone      Boolean @default(false)
-psl=}
-
-query getTasks {
-  fn: import { getTasks } from "@server/queries.js",
-  entities: [Task]
-}
-
-action createTask {
-  fn: import { createTask } from "@server/actions.js",
-  entities: [Task]
-}
-
-action updateTask {
-  fn: import { updateTask } from "@server/actions.js",
-  entities: [Task]
-}
-
-action deleteTask {
-  fn: import { deleteTask } from "@server/actions.js",
-  entities: [Task]
-}
