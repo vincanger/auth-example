@@ -17,6 +17,9 @@ app ToDoApp {
     ("@chakra-ui/react", "2.7.1"),
     ("react-rewards", "2.0.4"),
     ("react-icons", "4.7.1"),
+    ("@emotion/styled", "11.10.5"),
+    ("@emotion/react", "11.10.5"),
+    ("framer-motion", "6.0"),
   ],
 }
 
@@ -26,9 +29,15 @@ entity Task {=psl
     isDone      Boolean @default(false)
 psl=}
 
-
-
-
+crud tasksCrud {
+  entity: Task,
+  operations: {
+    create: {},
+    getAll: {},
+    update: {},
+    delete: {},
+  }
+}
 
 entity User {=psl
     id                        Int           @id @default(autoincrement())

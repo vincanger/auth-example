@@ -1,19 +1,22 @@
-import { Input, HStack, Text, Checkbox, Button as CButton } from '@chakra-ui/react';
+import { Input, HStack, Text, Checkbox, Button as CButton, Box } from '@chakra-ui/react';
 import Button from './components/Button';
 import MainLayout from './MainLayout';
 import React, { useState } from 'react';
+import { Task } from '@wasp/entities';
 
-const MainPage = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: 1,
-      description: 'Task 1',
-      isDone: false,
-      userId: 1,
-    },
-  ]);
 
-  const handleNewTask = (newTask: Task) => setTasks([...tasks, newTask]);
+export default function MainPage() {
+    const [tasks, setTasks] = useState([
+      {
+        id: 1,
+        description: 'Task 1',
+        isDone: false,
+      },
+    ]);
+
+  const handleNewTask = (newTask: Task) => {
+    setTasks([...tasks, newTask])
+  };
 
   return (
     <MainLayout>
@@ -23,23 +26,27 @@ const MainPage = () => {
     </MainLayout>
   );
 };
-export default MainPage;
 
 function Todo({ id, isDone, description }: Task) {
+
   return (
     <HStack
       alignItems={'center'}
+      justify='space-between'
       bgColor='purple.50'
       borderRadius='lg'
       border='1px solid rgba(0, 0, 0, 0.11)'
       p={2}
       w='full'
     >
-      <Checkbox checked={isDone} onChange={async (e) => console.log('!!!!')} />
-      <Text ml={2}>{description}</Text>
+      <HStack>
+      {/* <Checkbox checked={isDone} onChange={async (e) => updateTask({ id, isDone: e.currentTarget.checked})} /> */}
+      <Text ml={2} {...isDone && {as: 's'}}>{description}</Text>
+
+      </HStack>
       {/* {isDone && (
-        <CButton size={'xs'} variant='unstyled' onClick={() => deleteTask({ taskId: id })}>
-          '❌'
+        <CButton size={'xs'} variant='unstyled' onClick={() => deleteTask({ id })}>
+          ❌
         </CButton>
       )} */}
     </HStack>
@@ -52,11 +59,9 @@ function NewTaskForm({ createTask }: { createTask: any }) {
   const handleSubmit = async () => {
     try {
       createTask({
-        id: 3,
         description,
-        isDone: false,
-        userId: 1,
       });
+      (document.getElementById('description') as HTMLInputElement).value = '';
     } catch (err: any) {
       window.alert('Error: ' + err?.message);
     }
@@ -87,10 +92,3 @@ function NewTaskForm({ createTask }: { createTask: any }) {
     </HStack>
   );
 }
-
-export type Task = {
-  id: number;
-  description: string;
-  isDone: boolean;
-  userId: number | null;
-};
