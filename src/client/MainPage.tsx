@@ -4,18 +4,15 @@ import MainLayout from './MainLayout';
 import React, { useState } from 'react';
 import { Task } from '@wasp/entities';
 
+import { tasksCrud } from '@wasp/crud/tasksCrud';
+
 
 export default function MainPage() {
-    const [tasks, setTasks] = useState([
-      {
-        id: 1,
-        description: 'Task 1',
-        isDone: false,
-      },
-    ]);
+  const { data: tasks } = tasksCrud.getAll.useQuery();
+  const createTask = tasksCrud.create.useAction();
 
   const handleNewTask = (newTask: Task) => {
-    setTasks([...tasks, newTask])
+    createTask(newTask)
   };
 
   return (
@@ -25,10 +22,13 @@ export default function MainPage() {
       {tasks && tasks.map((tsk) => <Todo {...tsk} key={tsk.id} />)}
     </MainLayout>
   );
-};
+}
 
 function Todo({ id, isDone, description }: Task) {
 
+  const updateTask = tasksCrud.update.useAction();
+  const deleteTask = tasksCrud.delete.useAction();
+  
   return (
     <HStack
       alignItems={'center'}
@@ -40,15 +40,19 @@ function Todo({ id, isDone, description }: Task) {
       w='full'
     >
       <HStack>
-      {/* <Checkbox checked={isDone} onChange={async (e) => updateTask({ id, isDone: e.currentTarget.checked})} /> */}
-      <Text ml={2} {...isDone && {as: 's'}}>{description}</Text>
-
+        <Checkbox
+          defaultChecked={!!isDone}
+          onChange={async (e) => updateTask({ id, isDone: e.currentTarget.checked })}
+        />
+        <Text ml={2} {...(isDone && { as: 's' })}>
+          {description}
+        </Text>
       </HStack>
-      {/* {isDone && (
+      {isDone && (
         <CButton size={'xs'} variant='unstyled' onClick={() => deleteTask({ id })}>
           ❌
         </CButton>
-      )} */}
+      )}
     </HStack>
   );
 }
