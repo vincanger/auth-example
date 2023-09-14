@@ -8,7 +8,7 @@ app ToDoApp {
     methods: {
       google: {},
       gitHub: {},
-      usernameAndPassword: {}
+      // and other methods!!!
     },
     onAuthFailedRedirectTo: "/login",
   },
@@ -23,42 +23,19 @@ app ToDoApp {
   ],
 }
 
+// -<>-- 🚗 ENTITIES 🐝 --<>- //
+
 entity Task {=psl
-    id          Int     @id @default(autoincrement())
-    description String
-    isDone      Boolean @default(false)
+  id          Int     @id @default(autoincrement())
+  description String
+  isDone      Boolean @default(false)
 psl=}
 
-crud tasksCrud {
-  entity: Task,
-  operations: {
-    create: {},
-    getAll: {},
-    update: {},
-    delete: {},
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 entity User {=psl
-    id                        Int           @id @default(autoincrement())
-    username                  String        @unique
-    password                  String
-    externalAuthAssociations  SocialLogin[]
+  id                        Int           @id @default(autoincrement())
+  username                  String        @unique
+  password                  String
+  externalAuthAssociations  SocialLogin[]
 psl=}
 
 entity SocialLogin {=psl
@@ -71,6 +48,25 @@ entity SocialLogin {=psl
   @@unique([provider, providerId, userId])
 psl=}
 
+// -<>-- 💩 CRUD 🐝 --<>- //
+
+crud tasksCrud {
+  entity: Task,
+  operations: {
+    create: {},
+    getAll: {},
+    update: {},
+    delete: {},
+  }
+}
+
+// -<>-- ⛑ OPERATIONS 🐝 --<>- //
+
+query getFinishedTasks {
+  fn: import { getFinishedTasks } from "@server/queries.js",
+  entities: [Task]
+}
+
 // -<>-- 🚗 ROUTES 🐝 --<>- //
 
 route RootRoute { path: "/", to: MainPage }
@@ -81,12 +77,12 @@ page MainPage {
 
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
-  component: import { LoginPage } from "@client/Login"
+  component: import { LoginPage } from "@client/LoginPage"
 }
 
-route RegisterRoute { path: "/register", to: RegisterPage }
-page RegisterPage {
-  component: import Register from "@client/components/Register"
-}
+// route RegisterRoute { path: "/register", to: RegisterPage }
+// page RegisterPage {
+//   component: import Register from "@client/components/Register"
+// }
 
 

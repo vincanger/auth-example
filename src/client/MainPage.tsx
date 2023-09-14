@@ -1,25 +1,39 @@
 import { Input, HStack, Text, Checkbox, Button as CButton, Box } from '@chakra-ui/react';
+import useReward from './components/useReward';
 import Button from './components/Button';
 import MainLayout from './MainLayout';
 import React, { useState } from 'react';
-import { Task } from '@wasp/entities';
 
+import { Task } from '@wasp/entities';
+import useAuth from '@wasp/auth/useAuth';
 import { tasksCrud } from '@wasp/crud/tasksCrud';
 
+import { useQuery } from '@wasp/queries';
+import getFinishedTasks from '@wasp/queries/getFinishedTasks';
 
 export default function MainPage() {
+  useReward();
+
+  const { data: finishedTasks } = useQuery(getFinishedTasks);
+
+  const { data: user } = useAuth();
+
   const { data: tasks } = tasksCrud.getAll.useQuery();
   const createTask = tasksCrud.create.useAction();
 
-  const handleNewTask = (newTask: Task) => {
-    createTask(newTask)
+  const handleNewTask = async (newTask: Task) => {
+    await createTask(newTask)
   };
 
   return (
-    <MainLayout>
+    <MainLayout username={user?.username}>
       <NewTaskForm createTask={handleNewTask} />
 
       {tasks && tasks.map((tsk) => <Todo {...tsk} key={tsk.id} />)}
+
+      {/* finishedTasks go here */}
+      <Text> Finished Tasks</Text>
+      {finishedTasks && finishedTasks.map((tsk) => <Todo {...tsk} key={tsk.id} />)}
     </MainLayout>
   );
 }
@@ -42,14 +56,14 @@ function Todo({ id, isDone, description }: Task) {
       <HStack>
         <Checkbox
           defaultChecked={!!isDone}
-          onChange={async (e) => updateTask({ id, isDone: e.currentTarget.checked })}
+          onChange={async (e) => await updateTask({ id, isDone: e.currentTarget.checked })}
         />
         <Text ml={2} {...(isDone && { as: 's' })}>
           {description}
         </Text>
       </HStack>
       {isDone && (
-        <CButton size={'xs'} variant='unstyled' onClick={() => deleteTask({ id })}>
+        <CButton size={'xs'} variant='unstyled' onClick={async () => await deleteTask({ id })}>
           ❌
         </CButton>
       )}
@@ -62,7 +76,7 @@ function NewTaskForm({ createTask }: { createTask: any }) {
 
   const handleSubmit = async () => {
     try {
-      createTask({
+      await createTask({
         description,
       });
       (document.getElementById('description') as HTMLInputElement).value = '';
@@ -90,9 +104,12 @@ function NewTaskForm({ createTask }: { createTask: any }) {
         }}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <Button onClick={handleSubmit} minWidth={'7rem'}>
-        {'Add Task'}
-      </Button>
+      <Box id='rewardId' >
+        <Button onClick={handleSubmit} minWidth={'7rem'} >
+          {'Add Task'}
+        </Button>
+      </Box>
+
     </HStack>
   );
 }
