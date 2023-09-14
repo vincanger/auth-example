@@ -1,0 +1,88 @@
+app ToDoApp {
+  wasp: { version: "^0.11.0" },
+  title: "ToDo App",
+
+  auth: {
+    userEntity: User,
+    externalAuthEntity: SocialLogin,
+    methods: {
+      google: {},
+      gitHub: {},
+      // and other methods!!!
+    },
+    onAuthFailedRedirectTo: "/login",
+  },
+
+ dependencies: [
+    ("@chakra-ui/react", "2.7.1"),
+    ("react-rewards", "2.0.4"),
+    ("react-icons", "4.7.1"),
+    ("@emotion/styled", "11.10.5"),
+    ("@emotion/react", "11.10.5"),
+    ("framer-motion", "6.0"),
+  ],
+}
+
+// -<>-- 🚗 ENTITIES 🐝 --<>- //
+
+entity Task {=psl
+  id          Int     @id @default(autoincrement())
+  description String
+  isDone      Boolean @default(false)
+psl=}
+
+entity User {=psl
+  id                        Int           @id @default(autoincrement())
+  username                  String        @unique
+  password                  String
+  externalAuthAssociations  SocialLogin[]
+psl=}
+
+entity SocialLogin {=psl
+  id          Int       @id @default(autoincrement())
+  provider    String
+  providerId  String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  createdAt   DateTime  @default(now())
+  @@unique([provider, providerId, userId])
+psl=}
+
+// -<>-- 💩 CRUD 🐝 --<>- //
+
+crud tasksCrud {
+  entity: Task,
+  operations: {
+    create: {},
+    getAll: {},
+    update: {},
+    delete: {},
+  }
+}
+
+// -<>-- ⛑ OPERATIONS 🐝 --<>- //
+
+query getFinishedTasks {
+  fn: import { getFinishedTasks } from "@server/queries.js",
+  entities: [Task]
+}
+
+// -<>-- 🚗 ROUTES 🐝 --<>- //
+
+route RootRoute { path: "/", to: MainPage }
+page MainPage {
+  authRequired: true,
+  component: import Main from "@client/MainPage"
+}
+
+route LoginRoute { path: "/login", to: LoginPage }
+page LoginPage {
+  component: import { LoginPage } from "@client/LoginPage"
+}
+
+// route RegisterRoute { path: "/register", to: RegisterPage }
+// page RegisterPage {
+//   component: import Register from "@client/components/Register"
+// }
+
+
