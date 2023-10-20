@@ -6,8 +6,9 @@ app ToDoApp {
     userEntity: User,
     externalAuthEntity: SocialLogin,
     methods: {
-      google: {},
+      usernameAndPassword: {},
       gitHub: {},
+      google: {},
       // and other methods!!!
     },
     onAuthFailedRedirectTo: "/login",
@@ -23,7 +24,7 @@ app ToDoApp {
   ],
 }
 
-// -<>-- 🚗 ENTITIES 🐝 --<>- //
+// -<>-- 🚗 DB ENTITIES 🐝 --<>- //
 
 entity Task {=psl
   id          Int     @id @default(autoincrement())
@@ -48,22 +49,25 @@ entity SocialLogin {=psl
   @@unique([provider, providerId, userId])
 psl=}
 
-// -<>-- 💩 CRUD 🐝 --<>- //
-
-crud tasksCrud {
-  entity: Task,
-  operations: {
-    create: {},
-    getAll: {},
-    update: {},
-    delete: {},
-  }
-}
-
 // -<>-- ⛑ OPERATIONS 🐝 --<>- //
 
-query getFinishedTasks {
-  fn: import { getFinishedTasks } from "@server/queries.js",
+query getAllTasks {
+  fn: import { getAllTasks } from "@server/queries.js",
+  entities: [Task]
+}
+
+action createTask {
+  fn: import { createTask } from "@server/actions.js",
+  entities: [Task]
+}
+
+action updateTask {
+  fn: import { updateTask } from "@server/actions.js",
+  entities: [Task]
+}
+
+action deleteTask {
+  fn: import { deleteTask } from "@server/actions.js",
   entities: [Task]
 }
 
@@ -80,9 +84,9 @@ page LoginPage {
   component: import { LoginPage } from "@client/LoginPage"
 }
 
-// route RegisterRoute { path: "/register", to: RegisterPage }
-// page RegisterPage {
-//   component: import Register from "@client/components/Register"
-// }
+route SignupRoute { path: "/signup", to: SignupPage }
+page SignupPage {
+  component: import { SignupPage } from "@client/SignupPage"
+}
 
 

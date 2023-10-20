@@ -1,12 +1,12 @@
 import Layout from './MainLayout.jsx';
 
 /** 😎 WASP AUTH 🐝 */
-import { LoginForm } from '@wasp/auth/forms/Login';
+import { SignupForm } from '@wasp/auth/forms/Signup';
 
-export function LoginPage() {
+export function SignupPage() {
   return (
     <Layout>
-      <LoginForm />
+      <SignupForm />
     </Layout>
   );
 }

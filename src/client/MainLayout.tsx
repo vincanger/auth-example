@@ -1,4 +1,4 @@
-import { useEffect, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import Logo from './components/Logo';
 import { theme } from './components/Theme';
 import { MouseProvider } from './components/MouseProvider';

@@ -6,20 +6,16 @@ import React, { useState } from 'react';
 
 import { Task } from '@wasp/entities';
 import useAuth from '@wasp/auth/useAuth';
-import { tasksCrud } from '@wasp/crud/tasksCrud';
-
 import { useQuery } from '@wasp/queries';
-import getFinishedTasks from '@wasp/queries/getFinishedTasks';
+import getAllTasks from '@wasp/queries/getAllTasks';
+import createTask from '@wasp/actions/createTask';
+import updateTask from '@wasp/actions/updateTask';
+import deleteTask from '@wasp/actions/deleteTask';
 
 export default function MainPage() {
-  useReward();
-
-  const { data: finishedTasks } = useQuery(getFinishedTasks);
-
+  const { data: tasks } = useQuery(getAllTasks);
   const { data: user } = useAuth();
-
-  const { data: tasks } = tasksCrud.getAll.useQuery();
-  const createTask = tasksCrud.create.useAction();
+  useReward();
 
   const handleNewTask = async (newTask: Task) => {
     await createTask(newTask)
@@ -31,18 +27,12 @@ export default function MainPage() {
 
       {tasks && tasks.map((tsk) => <Todo {...tsk} key={tsk.id} />)}
 
-      {/* finishedTasks go here */}
-      <Text> Finished Tasks</Text>
-      {finishedTasks && finishedTasks.map((tsk) => <Todo {...tsk} key={tsk.id} />)}
+
     </MainLayout>
   );
 }
 
 function Todo({ id, isDone, description }: Task) {
-
-  const updateTask = tasksCrud.update.useAction();
-  const deleteTask = tasksCrud.delete.useAction();
-  
   return (
     <HStack
       alignItems={'center'}
@@ -56,14 +46,14 @@ function Todo({ id, isDone, description }: Task) {
       <HStack>
         <Checkbox
           defaultChecked={!!isDone}
-          onChange={async (e) => await updateTask({ id, isDone: e.currentTarget.checked })}
+          onChange={async (e) => await updateTask({ taskId: id, isDone: e.currentTarget.checked })}
         />
         <Text ml={2} {...(isDone && { as: 's' })}>
           {description}
         </Text>
       </HStack>
       {isDone && (
-        <CButton size={'xs'} variant='unstyled' onClick={async () => await deleteTask({ id })}>
+        <CButton size={'xs'} variant='unstyled' onClick={async () => await deleteTask({ taskId: id })}>
           ❌
         </CButton>
       )}

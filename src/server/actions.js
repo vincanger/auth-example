@@ -9,7 +9,7 @@ export async function createTask({ description }, context) {
 
 
 export async function updateTask({ taskId, isDone }, context) {
-
+  console.log('updateTask', taskId, isDone);
   return context.entities.Task.update({
     where: {
       id: taskId
