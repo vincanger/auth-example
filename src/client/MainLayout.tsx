@@ -1,12 +1,14 @@
+import { logout, useAuth } from "wasp/client/auth";
 import { ReactNode } from 'react';
 import Logo from './components/Logo';
 import { theme } from './components/Theme';
 import { MouseProvider } from './components/MouseProvider';
 import { ChakraProvider, VStack, HStack, Heading } from '@chakra-ui/react';
 import Button from './components/Button';
-import logout from '@wasp/auth/logout.js';
 
-const Layout = ({ username, children }: { username?: string, children: ReactNode }) => {
+const Layout = ({ children }: { children: ReactNode }) => {
+
+  const { data: user } = useAuth();
 
   return (
     <MouseProvider>
@@ -20,7 +22,7 @@ const Layout = ({ username, children }: { username?: string, children: ReactNode
           {/* <span id='rewardId' /> */}
 
           {children}
-          {username && username.length > 0 && <Button onClick={logout}>Logout</Button>}
+          {user!! && <Button onClick={logout}>Logout</Button>}
         </VStack>
       </ChakraProvider>
     </MouseProvider>

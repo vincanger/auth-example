@@ -1,38 +1,25 @@
-import { Input, HStack, Text, Checkbox, Button as CButton, Box } from '@chakra-ui/react';
-import useReward from './components/useReward';
+import { useState, type FC } from 'react';
+import { Tasks } from 'wasp/client/crud';
+import { type Task } from 'wasp/entities';
 import Button from './components/Button';
-import MainLayout from './MainLayout';
-import React, { useState } from 'react';
-
-import { Task } from '@wasp/entities';
-import useAuth from '@wasp/auth/useAuth';
-import { useQuery } from '@wasp/queries';
-import getAllTasks from '@wasp/queries/getAllTasks';
-import createTask from '@wasp/actions/createTask';
-import updateTask from '@wasp/actions/updateTask';
-import deleteTask from '@wasp/actions/deleteTask';
+import { Input, HStack, Text, Checkbox, Button as CButton, Box } from '@chakra-ui/react';
 
 export default function MainPage() {
-  const { data: tasks } = useQuery(getAllTasks);
-  const { data: user } = useAuth();
-  useReward();
-
-  const handleNewTask = async (newTask: Task) => {
-    await createTask(newTask)
-  };
+  const { data: tasks } = Tasks.getAll.useQuery();
+  const createTask = Tasks.create.useAction();
 
   return (
-    <MainLayout username={user?.username}>
-      <NewTaskForm createTask={handleNewTask} />
-
+    <>
+      <NewTaskForm createTask={createTask} />
       {tasks && tasks.map((tsk) => <Todo {...tsk} key={tsk.id} />)}
-
-
-    </MainLayout>
+    </>
   );
 }
 
-function Todo({ id, isDone, description }: Task) {
+const Todo: FC<Task> = ({ id, isDone, description }) => {
+  const updateTask = Tasks.update.useAction();
+  const deleteTask = Tasks.delete.useAction();
+
   return (
     <HStack
       alignItems={'center'}
@@ -45,15 +32,15 @@ function Todo({ id, isDone, description }: Task) {
     >
       <HStack>
         <Checkbox
-          defaultChecked={!!isDone}
-          onChange={async (e) => await updateTask({ taskId: id, isDone: e.currentTarget.checked })}
+          defaultChecked={isDone}
+          onChange={async (e) => await updateTask({ id: id, isDone: e.currentTarget.checked })}
         />
         <Text ml={2} {...(isDone && { as: 's' })}>
           {description}
         </Text>
       </HStack>
       {isDone && (
-        <CButton size={'xs'} variant='unstyled' onClick={async () => await deleteTask({ taskId: id })}>
+        <CButton size={'xs'} variant='unstyled' onClick={async () => await deleteTask({ id: id })}>
           ❌
         </CButton>
       )}
@@ -61,7 +48,11 @@ function Todo({ id, isDone, description }: Task) {
   );
 }
 
-function NewTaskForm({ createTask }: { createTask: any }) {
+interface NewTaskFormProps {
+  createTask: ({description}: {description: string}) => Promise<any>;
+}
+
+const NewTaskForm: FC<NewTaskFormProps> = ({ createTask }) => {
   const [description, setDescription] = useState<string>('');
 
   const handleSubmit = async () => {
@@ -69,7 +60,7 @@ function NewTaskForm({ createTask }: { createTask: any }) {
       await createTask({
         description,
       });
-      (document.getElementById('description') as HTMLInputElement).value = '';
+      setDescription('');
     } catch (err: any) {
       window.alert('Error: ' + err?.message);
     }
@@ -92,14 +83,14 @@ function NewTaskForm({ createTask }: { createTask: any }) {
           boxShadow: 'none !important',
           borderColor: 'transparent',
         }}
+        value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <Box id='rewardId' >
-        <Button onClick={handleSubmit} minWidth={'7rem'} >
+      <Box id='rewardId'>
+        <Button onClick={handleSubmit} minWidth={'7rem'}>
           {'Add Task'}
         </Button>
       </Box>
-
     </HStack>
   );
-}
+};

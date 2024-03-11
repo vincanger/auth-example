@@ -1,3 +1,4 @@
+import { signup } from "wasp/client/auth";
 import React from 'react';
 import waspLogo from '../waspLogo.png';
 import Card from './Card';
@@ -5,10 +6,9 @@ import { Box, Stack } from '@chakra-ui/react';
 import { MouseProvider } from './MouseProvider';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { theme } from './Theme';
+
+
 import { useHistory } from 'react-router-dom';
-
-
-import signup from '@wasp/auth/signup';
 
 
 const Register = () => {
