@@ -6,17 +6,18 @@ app ToDoApp {
     userEntity: User,
     methods: {
       gitHub: {},
+      google: {},
       usernameAndPassword: {},
     },
     onAuthFailedRedirectTo: "/login",
   },
 
   client: {
-    rootComponent: import Layout from "@src/client/MainLayout",
+    rootComponent: import Layout from "@src/client/components/MainLayout",
   },
 }
 
-// -<>-- 🚗 DB ENTITIES 🐝 --<>- //
+// -<>-- // --<>- //
 
 entity Task {=psl
   id                        Int           @id @default(autoincrement())
@@ -28,7 +29,7 @@ entity User {=psl
   id                        Int           @id @default(autoincrement())
 psl=}
 
-// -<>-- ⛑ OPERATIONS 🐝 --<>- //
+// -<>-- // --<>- //
 
 crud Tasks {
   entity: Task,
@@ -40,8 +41,7 @@ crud Tasks {
   },
 }
 
-
-// -<>-- 🚗 ROUTES 🐝 --<>- //
+// -<>-- // --<>- //
 
 route RootRoute { path: "/", to: MainPage }
 page MainPage {
@@ -58,5 +58,3 @@ route SignupRoute { path: "/signup", to: SignupPage }
 page SignupPage {
   component: import { SignupPage } from "@src/client/auth/SignupPage"
 }
-
-

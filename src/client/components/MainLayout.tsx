@@ -1,10 +1,10 @@
 import { logout, useAuth } from "wasp/client/auth";
 import { ReactNode } from 'react';
-import Logo from './components/Logo';
-import { theme } from './components/Theme';
-import { MouseProvider } from './components/MouseProvider';
+import Logo from './Logo';
+import { theme } from './Theme';
+import { MouseProvider } from './MouseProvider';
 import { ChakraProvider, VStack, HStack, Heading } from '@chakra-ui/react';
-import Button from './components/Button';
+import Button from './Button';
 
 const Layout = ({ children }: { children: ReactNode }) => {
 

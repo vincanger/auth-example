@@ -1,5 +1,5 @@
-import waspLogo from '../waspLogo.png';
-import { Center, VStack, Box, BoxProps } from '@chakra-ui/react';
+import waspLogo from '../static/waspLogo.png';
+import { VStack, Box, BoxProps } from '@chakra-ui/react';
 
 const Logo = (props: BoxProps) => {
   return (
